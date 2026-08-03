@@ -74,6 +74,17 @@ Future<String> calcularDeclaracion() async {
     return '';
   }
 
+// Leer la lista de inmuebles (guardada por gestionarInmuebles)
+  List<dynamic> inmuebles = [];
+  final inmueblesRaw = prefs.getString('answer_inmuebles_json');
+  if (inmueblesRaw != null && inmueblesRaw.isNotEmpty) {
+    try {
+      final decoded = jsonDecode(inmueblesRaw);
+      if (decoded is List) inmuebles = decoded;
+    } catch (e) {
+      inmuebles = [];
+    }
+  }
   final datos = {
     'ingreso_integro_trabajo': num('m02_gross_income'),
     'retribucion_especie': num('m02_especie'),
@@ -90,8 +101,6 @@ Future<String> calcularDeclaracion() async {
     'dividendos': num('m05_dividendos'),
     'intereses': num('m05_intereses'),
     'retenciones_capital': num('m05_retenciones_capital'),
-    'ganancias_patrimoniales': num('m06_ganancias'),
-    'perdidas_patrimoniales': num('m06_perdidas'),
     'perdidas_pendientes_anteriores': num('m06_perdidas_pendientes'),
     'aportacion_empleo_trabajador': num('m12_aportacion_trabajador'),
     'contribucion_empresa': num('m12_contribucion_empresa'),
@@ -103,23 +112,45 @@ Future<String> calcularDeclaracion() async {
     'gastos_idiomas': num('m13_gastos_idiomas'),
     'gastos_vestuario_escolar': num('m13_gastos_vestuario'),
     'cuotas_empleada_hogar': num('m13_cuotas_hogar'),
-    'ascendientes_a_cargo': intv('m13_ascendientes_cargo'),
+    'ascendientes_a_cargo': intv('m04_num_ascendientes'),
     'tipo_familia_numerosa': famNumerosa(),
     'gastos_guarderia': num('m13ar_gastos_guarderia'),
     'gastos_clases_apoyo': num('m13ar_clases_apoyo'),
-    'personas_dependientes': intv('m13ar_dependientes'),
+    'personas_dependientes': intv('m04_num_ascendientes'),
     'inversion_nuevas_entidades': num('m13_inversion_nuevas'),
     'inversion_tipo_especial': si('m13_inversion_especial'),
     'es_familia_monoparental': si('m13_monoparental'),
-    'contribuyente_con_discapacidad': si('m13_contrib_discapacidad'),
+    'contribuyente_con_discapacidad': si('m04_discapacidad_propia'),
     'es_viudo_reciente': si('m13_es_viudo'),
-    'tiene_hijos_a_cargo': si('m13_hijos_a_cargo'),
+    'tiene_hijos_a_cargo': si('m03_tiene_hijos'),
     'gastos_rehabilitacion_vivienda': num('m13_gastos_rehabilitacion'),
     'hijos_3_a_5_anos': intv('m13_hijos_3_5'),
     'hijos_material_escolar': intv('m13_material_escolar'),
     'gasto_abonos_culturales': num('m13_abonos_culturales'),
     'adopciones_ejercicio': intv('m13_adopciones'),
     'adopcion_internacional_cyl': si('m13_adopcion_internacional'),
+    'inmuebles': inmuebles,
+    'retenciones_ganancias': num('m06_retenciones_ganancias'),
+    'trabajador_activo': si('m04_trabajador_activo'),
+    'movilidad_geografica': si('m04_movilidad_geografica'),
+    'anualidades_alimentos_hijos': num('m03_anualidades_alimentos'),
+    // Cuota sindical
+    'cuota_sindical': num('m02_union_fee'),
+    // Fondos sumados a las ganancias/pérdidas (CAMBIAR las líneas existentes)
+    'ganancias_patrimoniales':
+        num('m06_ganancias') + num('m07_ganancia_fondos'),
+    'perdidas_patrimoniales': num('m06_perdidas') + num('m07_perdida_fondos'),
+    // Venta de inmuebles (M08)
+    'venta_inmueble_transmision': num('m08_valor_venta'),
+    'venta_inmueble_adquisicion': num('m08_valor_compra'),
+    'reinversion_vivienda': si('m08_reinversion'),
+    'importe_reinvertido': num('m08_importe_reinvertido'),
+    'mayor_65_vivienda_habitual': (edad >= 65 && si('m08_era_habitual')),
+    // Vivienda habitual / hipoteca (M10)
+    'vivienda_habitual_anterior_2013': si('m10_hipoteca_anterior_2013'),
+    'pago_hipoteca_anual': num('m10_pago_hipoteca'),
+    // Doble imposición internacional (M15)
+    'deduccion_doble_imposicion_int': num('m15_importe_retenido'),
   };
 
   const base = 'https://mirenta-api-976371529191.europe-west1.run.app';

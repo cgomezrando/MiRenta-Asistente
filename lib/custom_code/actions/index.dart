@@ -18,3 +18,10 @@ export '/custom_code/actions/mostrar_mis_declaraciones.dart'
     show mostrarMisDeclaraciones;
 export '/custom_code/actions/abrir_declaracion.dart' show abrirDeclaracion;
 export '/custom_code/actions/limpiar_respuestas.dart' show limpiarRespuestas;
+export '/custom_code/actions/gestionar_inmuebles.dart' show gestionarInmuebles;
+export '/custom_code/actions/cerrar_sesion.dart' show cerrarSesion;
+export '/custom_code/actions/hay_sesion.dart' show haySesion;
+export '/custom_code/actions/mostrar_acceso.dart' show mostrarAcceso;
+export '/custom_code/actions/mostrar_aviso_inicial.dart'
+    show mostrarAvisoInicial;
+export '/custom_code/actions/mostrar_informacion.dart' show mostrarInformacion;

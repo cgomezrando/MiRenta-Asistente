@@ -330,7 +330,64 @@ Future showInterviewDialog(BuildContext context) async {
                 ),
               );
               break;
-
+            case 'inmuebles':
+              controlWidget = Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: secondaryColor.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: secondaryColor),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(Icons.home_work_outlined,
+                            size: 20, color: primaryColor),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Añade aquí todos tus inmuebles: los que tienes alquilados y las segundas viviendas a tu disposición. No incluyas tu vivienda habitual.',
+                            style: TextStyle(
+                                fontSize: 14, color: textPrimary, height: 1.4),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  InkWell(
+                    onTap: () async {
+                      await gestionarInmuebles(context);
+                      setState(() {});
+                    },
+                    borderRadius: BorderRadius.circular(10),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      decoration: BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add_home_outlined,
+                              size: 20, color: Colors.white),
+                          SizedBox(width: 10),
+                          Text('Gestionar mis inmuebles',
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+              break;
             case 'info':
               controlWidget = Container(
                 padding: EdgeInsets.all(16),
@@ -669,7 +726,11 @@ Future showInterviewDialog(BuildContext context) async {
                                     answerValue = textController.text;
                                     break;
                                 }
-
+// La pantalla de inmuebles no guarda un valor
+                                // de texto; los inmuebles se guardan aparte.
+                                if (question.controlType == 'inmuebles') {
+                                  answerValue = 'ok';
+                                }
                                 // ← AQUÍ el bloque nuevo de validación
                                 if (question.required &&
                                     answerValue.trim().isEmpty) {

@@ -428,6 +428,25 @@ Future<List<QuestionStruct>> loadScript() async {
       conditionValue: 'Sí',
       order: 23,
     ),
+    QuestionStruct(
+      id: 'm03_anualidades_alimentos',
+      module: 'M03',
+      questionText:
+          '¿Pagas pensión de alimentos a tus hijos por sentencia judicial?',
+      clarification:
+          'Anualidades por alimentos a los hijos fijadas en un convenio de divorcio o separación aprobado judicialmente.',
+      shortHelp:
+          'Si pagas una pensión de alimentos a tus hijos establecida por decisión judicial (divorcio o separación), tiene un tratamiento fiscal favorable. Indica el importe anual total. No incluyas la pensión compensatoria al excónyuge (esa es distinta).',
+      icon: 'child_care',
+      controlType: 'amount',
+      options: [],
+      savesTo: 'declarantA.childSupportPayments',
+      required: false,
+      min: 0.0,
+      conditionField: '',
+      conditionValue: '',
+      order: 24,
+    ),
 
     // ===== M04 - Discapacidad y ascendientes =====
     QuestionStruct(
@@ -444,7 +463,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: '',
       conditionValue: '',
-      order: 24,
+      order: 25,
     ),
     QuestionStruct(
       id: 'm04_grado_discapacidad',
@@ -460,7 +479,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: 'm04_discapacidad_propia',
       conditionValue: 'Sí',
-      order: 25,
+      order: 26,
     ),
     QuestionStruct(
       id: 'm04_movilidad_reducida',
@@ -476,7 +495,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: 'm04_discapacidad_propia',
       conditionValue: 'Sí',
-      order: 26,
+      order: 27,
     ),
     QuestionStruct(
       id: 'm04_ascendientes',
@@ -493,7 +512,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: '',
       conditionValue: '',
-      order: 27,
+      order: 28,
     ),
     QuestionStruct(
       id: 'm04_num_ascendientes',
@@ -510,7 +529,40 @@ Future<List<QuestionStruct>> loadScript() async {
       max: 6.0,
       conditionField: 'm04_ascendientes',
       conditionValue: 'Sí',
-      order: 28,
+      order: 29,
+    ),
+    QuestionStruct(
+      id: 'm04_trabajador_activo',
+      module: 'M04',
+      questionText: '¿Trabajas por cuenta ajena actualmente (en activo)?',
+      clarification:
+          'Para el incremento de gastos deducibles para trabajadores con discapacidad en activo.',
+      shortHelp:
+          'Si tienes una discapacidad reconocida y trabajas por cuenta ajena (no es pensión), tienes derecho a un incremento de gastos deducibles de 3.500 € (o 7.750 € si la discapacidad es de grado alto o con movilidad reducida).',
+      icon: 'accessible',
+      controlType: 'yesNo',
+      options: [],
+      savesTo: 'declarantA.isActiveWorker',
+      required: false,
+      conditionField: 'm04_discapacidad_propia',
+      conditionValue: 'Sí',
+      order: 30,
+    ),
+    QuestionStruct(
+      id: 'm04_movilidad_geografica',
+      module: 'M04',
+      questionText: '¿Cambiaste de municipio este año para aceptar un empleo?',
+      clarification: 'Para el incremento de gastos por movilidad geográfica.',
+      shortHelp:
+          'Si estabas desempleado, te inscribiste en la oficina de empleo y aceptaste un trabajo que te obligó a mudarte a otro municipio, tienes derecho a un incremento de gastos deducibles de 2.000 € (ese año y el siguiente).',
+      icon: 'accessible',
+      controlType: 'yesNo',
+      options: [],
+      savesTo: 'declarantA.geographicMobility',
+      required: false,
+      conditionField: '',
+      conditionValue: '',
+      order: 31,
     ),
 
     // ===== M05 - Intereses y dividendos =====
@@ -527,7 +579,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: false,
       conditionField: '',
       conditionValue: '',
-      order: 29,
+      order: 32,
     ),
     QuestionStruct(
       id: 'm05_tiene_intereses',
@@ -543,7 +595,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: '',
       conditionValue: '',
-      order: 30,
+      order: 33,
     ),
     QuestionStruct(
       id: 'm05_intereses',
@@ -559,7 +611,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm05_tiene_intereses',
       conditionValue: 'Sí',
-      order: 31,
+      order: 34,
     ),
     QuestionStruct(
       id: 'm05_tiene_dividendos',
@@ -575,7 +627,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: '',
       conditionValue: '',
-      order: 32,
+      order: 35,
     ),
     QuestionStruct(
       id: 'm05_dividendos',
@@ -591,7 +643,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm05_tiene_dividendos',
       conditionValue: 'Sí',
-      order: 33,
+      order: 36,
     ),
     QuestionStruct(
       id: 'm05_retenciones_capital',
@@ -607,9 +659,9 @@ Future<List<QuestionStruct>> loadScript() async {
       savesTo: 'declarantA.capitalWithholdings',
       required: false,
       min: 0.0,
-      conditionField: '',
-      conditionValue: '',
-      order: 34,
+      conditionField: 'm05_tiene_dividendos',
+      conditionValue: 'Sí',
+      order: 37,
     ),
 
     // ===== M06 - Acciones y ETFs =====
@@ -628,7 +680,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: '',
       conditionValue: '',
-      order: 35,
+      order: 38,
     ),
     QuestionStruct(
       id: 'm06_ganancias',
@@ -646,7 +698,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm06_tiene_ventas',
       conditionValue: 'Sí',
-      order: 36,
+      order: 39,
     ),
     QuestionStruct(
       id: 'm06_perdidas',
@@ -663,7 +715,25 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm06_tiene_ventas',
       conditionValue: 'Sí',
-      order: 37,
+      order: 40,
+    ),
+    QuestionStruct(
+      id: 'm06_retenciones_ganancias',
+      module: 'M06',
+      questionText: '¿Te retuvieron algo por esas ventas o ganancias?',
+      clarification:
+          'Retenciones practicadas sobre ganancias patrimoniales (por ejemplo, en la venta de algunos fondos o premios).',
+      shortHelp:
+          'Algunas ganancias llevan retención (por ejemplo, reembolsos de fondos de inversión o premios). Indica el total retenido por ganancias. Si no hubo retención, pon 0.',
+      icon: 'trending_up',
+      controlType: 'amount',
+      options: [],
+      savesTo: 'declarantA.gainsWithholdings',
+      required: false,
+      min: 0.0,
+      conditionField: 'm06_tiene_ventas',
+      conditionValue: 'Sí',
+      order: 41,
     ),
     QuestionStruct(
       id: 'm06_tiene_pendientes',
@@ -680,7 +750,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: 'm06_tiene_ventas',
       conditionValue: 'Sí',
-      order: 38,
+      order: 42,
     ),
     QuestionStruct(
       id: 'm06_perdidas_pendientes',
@@ -698,7 +768,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm06_tiene_pendientes',
       conditionValue: 'Sí',
-      order: 39,
+      order: 43,
     ),
     QuestionStruct(
       id: 'm06_broker_extranjero',
@@ -714,7 +784,25 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: 'm06_tiene_ventas',
       conditionValue: 'Sí',
-      order: 40,
+      order: 44,
+    ),
+    QuestionStruct(
+      id: 'm06_otras_ganancias',
+      module: 'M06',
+      questionText: '¿Has tenido otras ganancias no derivadas de ventas?',
+      clarification:
+          'Por ejemplo, premios, subvenciones, ayudas públicas o intereses de indemnizaciones.',
+      shortHelp:
+          'Son ganancias que no vienen de vender algo: premios de lotería no exentos, subvenciones, ayudas públicas (como el Plan MOVES o ayudas al alquiler), o similares. Van a la base general. Si no has tenido, pon 0.',
+      icon: 'trending_up',
+      controlType: 'amount',
+      options: [],
+      savesTo: 'declarantA.otherGains',
+      required: false,
+      min: 0.0,
+      conditionField: '',
+      conditionValue: '',
+      order: 45,
     ),
 
     // ===== M07 - Fondos de inversion =====
@@ -733,7 +821,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: '',
       conditionValue: '',
-      order: 41,
+      order: 46,
     ),
     QuestionStruct(
       id: 'm07_ganancia_fondos',
@@ -750,7 +838,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm07_tiene_fondos',
       conditionValue: 'Sí',
-      order: 42,
+      order: 47,
     ),
     QuestionStruct(
       id: 'm07_perdida_fondos',
@@ -766,7 +854,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm07_tiene_fondos',
       conditionValue: 'Sí',
-      order: 43,
+      order: 48,
     ),
 
     // ===== M08 - Venta de inmuebles =====
@@ -784,7 +872,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: '',
       conditionValue: '',
-      order: 44,
+      order: 49,
     ),
     QuestionStruct(
       id: 'm08_valor_venta',
@@ -800,7 +888,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm08_tiene_venta',
       conditionValue: 'Sí',
-      order: 45,
+      order: 50,
     ),
     QuestionStruct(
       id: 'm08_valor_compra',
@@ -818,7 +906,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm08_tiene_venta',
       conditionValue: 'Sí',
-      order: 46,
+      order: 51,
     ),
     QuestionStruct(
       id: 'm08_era_habitual',
@@ -834,7 +922,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: 'm08_tiene_venta',
       conditionValue: 'Sí',
-      order: 47,
+      order: 52,
     ),
     QuestionStruct(
       id: 'm08_reinversion',
@@ -850,113 +938,63 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: 'm08_era_habitual',
       conditionValue: 'Sí',
-      order: 48,
-    ),
-
-    // ===== M09 - Alquileres =====
-    QuestionStruct(
-      id: 'm09_tiene_alquiler',
-      module: 'M09',
-      questionText: '¿Tienes algún inmueble alquilado?',
-      clarification:
-          'Una vivienda, local o plaza de garaje que alquiles a otros.',
-      shortHelp:
-          'El alquiler genera un rendimiento que tributa en la base general. Si es vivienda, tienes una reducción del 60% sobre el rendimiento neto.',
-      icon: 'home_work',
-      controlType: 'yesNo',
-      options: [],
-      savesTo: 'declarantA.hasRental',
-      required: true,
-      conditionField: '',
-      conditionValue: '',
-      order: 49,
-    ),
-    QuestionStruct(
-      id: 'm09_ingresos_alquiler',
-      module: 'M09',
-      questionText: '¿Cuánto has ingresado por el alquiler este año?',
-      clarification: 'Total de rentas cobradas.',
-      shortHelp: '',
-      icon: 'home_work',
-      controlType: 'amount',
-      options: [],
-      savesTo: 'declarantA.rentalIncome',
-      required: true,
-      min: 0.0,
-      conditionField: 'm09_tiene_alquiler',
-      conditionValue: 'Sí',
-      order: 50,
-    ),
-    QuestionStruct(
-      id: 'm09_gastos_alquiler',
-      module: 'M09',
-      questionText: '¿Cuánto has tenido en gastos deducibles?',
-      clarification:
-          'IBI, comunidad, reparaciones, intereses de hipoteca, seguros...',
-      shortHelp:
-          'Puedes deducir los gastos necesarios para el alquiler: IBI, comunidad, seguros, reparaciones, intereses del préstamo, amortización del inmueble...',
-      icon: 'home_work',
-      controlType: 'amount',
-      options: [],
-      savesTo: 'declarantA.rentalExpenses',
-      required: true,
-      min: 0.0,
-      conditionField: 'm09_tiene_alquiler',
-      conditionValue: 'Sí',
-      order: 51,
-    ),
-    QuestionStruct(
-      id: 'm09_es_vivienda',
-      module: 'M09',
-      questionText: '¿El inquilino usa el inmueble como vivienda habitual?',
-      clarification:
-          'No es lo mismo alquilar como vivienda que como local o temporada.',
-      shortHelp:
-          'Sólo el alquiler de vivienda habitual da derecho a la reducción del 60%. Los alquileres turísticos o de local no la tienen.',
-      icon: 'home_work',
-      controlType: 'yesNo',
-      options: [],
-      savesTo: 'declarantA.rentalIsHome',
-      required: true,
-      conditionField: 'm09_tiene_alquiler',
-      conditionValue: 'Sí',
-      order: 52,
-    ),
-
-    // ===== M10 - Vivienda e hipoteca =====
-    QuestionStruct(
-      id: 'm10_segunda_vivienda',
-      module: 'M10',
-      questionText: '¿Tienes una segunda vivienda a tu disposición?',
-      clarification: 'Una vivienda que no es la habitual ni está alquilada.',
-      shortHelp:
-          'Las segundas viviendas vacías generan una imputación de renta: Hacienda calcula un rendimiento ficticio (un % del valor catastral) aunque no las alquiles.',
-      icon: 'house',
-      controlType: 'yesNo',
-      options: [],
-      savesTo: 'declarantA.hasSecondHome',
-      required: true,
-      conditionField: '',
-      conditionValue: '',
       order: 53,
     ),
     QuestionStruct(
-      id: 'm10_valor_catastral',
-      module: 'M10',
-      questionText: '¿Cuál es el valor catastral de esa vivienda?',
-      clarification: 'Lo encuentras en el recibo del IBI.',
+      id: 'm08_importe_reinvertido',
+      module: 'M08',
+      questionText: '¿Cuánto vas a reinvertir en la nueva vivienda habitual?',
+      clarification:
+          'Importe que destinas a comprar tu nueva vivienda habitual (para la exención por reinversión).',
       shortHelp:
-          'La imputación es el 1,1% del valor catastral (2% si no está revisado en los últimos años).',
-      icon: 'house',
+          'Si reinviertes todo lo obtenido por la venta en tu nueva vivienda habitual, la ganancia queda totalmente exenta. Si reinviertes solo una parte, la exención es proporcional.',
+      icon: 'sell',
       controlType: 'amount',
       options: [],
-      savesTo: 'declarantA.cadastralValue',
-      required: true,
+      savesTo: 'declarantA.reinvestedAmount',
+      required: false,
       min: 0.0,
-      conditionField: 'm10_segunda_vivienda',
+      conditionField: 'm08_reinversion',
       conditionValue: 'Sí',
       order: 54,
     ),
+
+    // ===== M09 - Inmuebles (alquileres y segundas viviendas) =====
+    QuestionStruct(
+      id: 'm09_tiene_inmuebles',
+      module: 'M09',
+      questionText: '¿Tienes inmuebles además de tu vivienda habitual?',
+      clarification:
+          'Por ejemplo, pisos alquilados o segundas viviendas a tu disposición.',
+      shortHelp:
+          'Incluye cualquier inmueble que no sea tu vivienda habitual: los que tienes alquilados (generan ingresos) y las segundas viviendas o locales a tu disposición (generan una pequeña imputación de renta). Si solo tienes tu vivienda habitual, responde No.',
+      icon: 'home_work',
+      controlType: 'yesNo',
+      options: [],
+      savesTo: 'declarantA.hasProperties',
+      required: false,
+      conditionField: '',
+      conditionValue: '',
+      order: 55,
+    ),
+    QuestionStruct(
+      id: 'm09_gestionar_inmuebles',
+      module: 'M09',
+      questionText: 'Tus inmuebles',
+      clarification: 'Añade cada uno de tus inmuebles con sus datos.',
+      shortHelp:
+          'Pulsa el botón para añadir tus inmuebles uno a uno. Para cada uno indicarás si está alquilado o a tu disposición, y sus datos (ingresos, valor catastral, etc.).',
+      icon: 'home_work',
+      controlType: 'inmuebles',
+      options: [],
+      savesTo: '',
+      required: false,
+      conditionField: 'm09_tiene_inmuebles',
+      conditionValue: 'Sí',
+      order: 56,
+    ),
+
+    // ===== M10 - Vivienda e hipoteca =====
     QuestionStruct(
       id: 'm10_hipoteca_anterior_2013',
       module: 'M10',
@@ -973,7 +1011,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: '',
       conditionValue: '',
-      order: 55,
+      order: 57,
     ),
     QuestionStruct(
       id: 'm10_pago_hipoteca',
@@ -990,7 +1028,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm10_hipoteca_anterior_2013',
       conditionValue: 'Sí',
-      order: 56,
+      order: 58,
     ),
 
     // ===== M11 - Donativos =====
@@ -1009,7 +1047,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: '',
       conditionValue: '',
-      order: 57,
+      order: 59,
     ),
     QuestionStruct(
       id: 'm11_importe_donativos',
@@ -1025,7 +1063,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm11_tiene_donativos',
       conditionValue: 'Sí',
-      order: 58,
+      order: 60,
     ),
 
     // ===== M12 - Planes de pensiones =====
@@ -1043,7 +1081,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: '',
       conditionValue: '',
-      order: 59,
+      order: 61,
     ),
     QuestionStruct(
       id: 'm12_aportacion_trabajador',
@@ -1061,7 +1099,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm12_tiene_plan',
       conditionValue: 'Sí',
-      order: 60,
+      order: 62,
     ),
     QuestionStruct(
       id: 'm12_contribucion_empresa',
@@ -1079,10 +1117,28 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm12_tiene_plan',
       conditionValue: 'Sí',
-      order: 61,
+      order: 63,
     ),
 
     // ===== M13 - Deducciones autonómicas =====
+    QuestionStruct(
+      id: 'm13_revisar_deducciones',
+      module: 'M13',
+      questionText:
+          '¿Quieres revisar las deducciones de tu comunidad autónoma?',
+      clarification:
+          'Cada comunidad tiene deducciones propias (por alquiler, familia, educación, etc.). Te haremos unas preguntas rápidas para ver si te aplican.',
+      shortHelp:
+          'Las comunidades autónomas ofrecen deducciones que pueden reducir tu factura fiscal: por alquiler de vivienda, por ser familia numerosa o monoparental, por gastos educativos, por inversiones, y más. Si respondes que sí, te haremos unas preguntas para comprobar cuáles te aplican.',
+      icon: 'help_outline',
+      controlType: 'yesNo',
+      options: [],
+      savesTo: 'declarantA.reviewRegionalDeductions',
+      required: false,
+      conditionField: '',
+      conditionValue: '',
+      order: 64,
+    ),
     QuestionStruct(
       id: 'm13_intro',
       module: 'M13',
@@ -1096,9 +1152,9 @@ Future<List<QuestionStruct>> loadScript() async {
       options: [],
       savesTo: '',
       required: false,
-      conditionField: '',
-      conditionValue: '',
-      order: 62,
+      conditionField: 'm13_revisar_deducciones',
+      conditionValue: 'Sí',
+      order: 65,
     ),
     QuestionStruct(
       id: 'm13_hijos_nacidos',
@@ -1114,9 +1170,9 @@ Future<List<QuestionStruct>> loadScript() async {
       savesTo: 'familyUnit.childrenBornThisYear',
       required: false,
       min: 0.0,
-      conditionField: '',
-      conditionValue: '',
-      order: 63,
+      conditionField: 'm03_tiene_hijos',
+      conditionValue: 'Sí',
+      order: 66,
     ),
     QuestionStruct(
       id: 'm13_es_joven_alquiler',
@@ -1131,9 +1187,9 @@ Future<List<QuestionStruct>> loadScript() async {
       options: [],
       savesTo: 'declarantA.isYoungRenter',
       required: false,
-      conditionField: '',
-      conditionValue: '',
-      order: 64,
+      conditionField: 'm13_revisar_deducciones',
+      conditionValue: 'Sí',
+      order: 67,
     ),
     QuestionStruct(
       id: 'm13_alquiler_pagado',
@@ -1151,7 +1207,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm13_es_joven_alquiler',
       conditionValue: 'Sí',
-      order: 65,
+      order: 68,
     ),
     QuestionStruct(
       id: 'm13_tiene_gastos_educativos',
@@ -1167,7 +1223,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: false,
       conditionField: 'm03_tiene_hijos',
       conditionValue: 'Sí',
-      order: 66,
+      order: 69,
     ),
     QuestionStruct(
       id: 'm13_gastos_escolaridad',
@@ -1185,7 +1241,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm13_tiene_gastos_educativos',
       conditionValue: 'Sí',
-      order: 67,
+      order: 70,
     ),
     QuestionStruct(
       id: 'm13_gastos_idiomas',
@@ -1202,7 +1258,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm13_tiene_gastos_educativos',
       conditionValue: 'Sí',
-      order: 68,
+      order: 71,
     ),
     QuestionStruct(
       id: 'm13_gastos_vestuario',
@@ -1219,7 +1275,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm13_tiene_gastos_educativos',
       conditionValue: 'Sí',
-      order: 69,
+      order: 72,
     ),
     QuestionStruct(
       id: 'm13_cuotas_hogar',
@@ -1236,9 +1292,9 @@ Future<List<QuestionStruct>> loadScript() async {
       savesTo: 'familyUnit.householdEmployeeQuotas',
       required: false,
       min: 0.0,
-      conditionField: '',
-      conditionValue: '',
-      order: 70,
+      conditionField: 'm03_tiene_hijos',
+      conditionValue: 'Sí',
+      order: 73,
     ),
     QuestionStruct(
       id: 'm13_familia_numerosa',
@@ -1252,9 +1308,9 @@ Future<List<QuestionStruct>> loadScript() async {
       options: ['No', 'General', 'Especial'],
       savesTo: 'familyUnit.largeFamilyType',
       required: false,
-      conditionField: '',
-      conditionValue: '',
-      order: 71,
+      conditionField: 'm13_revisar_deducciones',
+      conditionValue: 'Sí',
+      order: 74,
     ),
     QuestionStruct(
       id: 'm13ar_gastos_guarderia',
@@ -1270,9 +1326,9 @@ Future<List<QuestionStruct>> loadScript() async {
       savesTo: 'familyUnit.daycareExpenses',
       required: false,
       min: 0.0,
-      conditionField: '',
-      conditionValue: '',
-      order: 72,
+      conditionField: 'm03_tiene_hijos',
+      conditionValue: 'Sí',
+      order: 75,
     ),
     QuestionStruct(
       id: 'm13ar_clases_apoyo',
@@ -1287,9 +1343,9 @@ Future<List<QuestionStruct>> loadScript() async {
       savesTo: 'familyUnit.tutoringExpenses',
       required: false,
       min: 0.0,
-      conditionField: '',
-      conditionValue: '',
-      order: 73,
+      conditionField: 'm03_tiene_hijos',
+      conditionValue: 'Sí',
+      order: 76,
     ),
     QuestionStruct(
       id: 'm13_inversion_nuevas',
@@ -1306,9 +1362,9 @@ Future<List<QuestionStruct>> loadScript() async {
       savesTo: 'declarantA.startupInvestment',
       required: false,
       min: 0.0,
-      conditionField: '',
-      conditionValue: '',
-      order: 74,
+      conditionField: 'm13_revisar_deducciones',
+      conditionValue: 'Sí',
+      order: 77,
     ),
     QuestionStruct(
       id: 'm13_inversion_especial',
@@ -1326,7 +1382,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: false,
       conditionField: 'm13_inversion_nuevas',
       conditionValue: '>0',
-      order: 75,
+      order: 78,
     ),
     QuestionStruct(
       id: 'm13_monoparental',
@@ -1340,9 +1396,9 @@ Future<List<QuestionStruct>> loadScript() async {
       options: [],
       savesTo: 'familyUnit.isSingleParent',
       required: false,
-      conditionField: '',
-      conditionValue: '',
-      order: 76,
+      conditionField: 'm13_revisar_deducciones',
+      conditionValue: 'Sí',
+      order: 79,
     ),
     QuestionStruct(
       id: 'm13_es_viudo',
@@ -1357,9 +1413,9 @@ Future<List<QuestionStruct>> loadScript() async {
       options: [],
       savesTo: 'declarantA.isRecentWidow',
       required: false,
-      conditionField: '',
-      conditionValue: '',
-      order: 77,
+      conditionField: 'm13_revisar_deducciones',
+      conditionValue: 'Sí',
+      order: 80,
     ),
     QuestionStruct(
       id: 'm13_gastos_rehabilitacion',
@@ -1375,9 +1431,9 @@ Future<List<QuestionStruct>> loadScript() async {
       savesTo: 'declarantA.homeRehabExpenses',
       required: false,
       min: 0.0,
-      conditionField: '',
-      conditionValue: '',
-      order: 78,
+      conditionField: 'm13_revisar_deducciones',
+      conditionValue: 'Sí',
+      order: 81,
     ),
     QuestionStruct(
       id: 'm13_hijos_3_5',
@@ -1393,9 +1449,9 @@ Future<List<QuestionStruct>> loadScript() async {
       savesTo: 'familyUnit.children3to5',
       required: false,
       min: 0.0,
-      conditionField: '',
-      conditionValue: '',
-      order: 79,
+      conditionField: 'm03_tiene_hijos',
+      conditionValue: 'Sí',
+      order: 82,
     ),
     QuestionStruct(
       id: 'm13_material_escolar',
@@ -1412,9 +1468,9 @@ Future<List<QuestionStruct>> loadScript() async {
       savesTo: 'familyUnit.schoolMaterialChildren',
       required: false,
       min: 0.0,
-      conditionField: '',
-      conditionValue: '',
-      order: 80,
+      conditionField: 'm03_tiene_hijos',
+      conditionValue: 'Sí',
+      order: 83,
     ),
     QuestionStruct(
       id: 'm13_abonos_culturales',
@@ -1430,9 +1486,9 @@ Future<List<QuestionStruct>> loadScript() async {
       savesTo: 'declarantA.culturalExpenses',
       required: false,
       min: 0.0,
-      conditionField: '',
-      conditionValue: '',
-      order: 81,
+      conditionField: 'm13_revisar_deducciones',
+      conditionValue: 'Sí',
+      order: 84,
     ),
     QuestionStruct(
       id: 'm13_adopciones',
@@ -1448,9 +1504,9 @@ Future<List<QuestionStruct>> loadScript() async {
       savesTo: 'familyUnit.adoptionsThisYear',
       required: false,
       min: 0.0,
-      conditionField: '',
-      conditionValue: '',
-      order: 82,
+      conditionField: 'm03_tiene_hijos',
+      conditionValue: 'Sí',
+      order: 85,
     ),
     QuestionStruct(
       id: 'm13_adopcion_internacional',
@@ -1467,7 +1523,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: false,
       conditionField: 'm13_adopciones',
       conditionValue: '>0',
-      order: 83,
+      order: 86,
     ),
 
     // ===== M14 - Declaración conjunta (cónyuge) =====
@@ -1486,7 +1542,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: false,
       conditionField: 'm01_conjunta_posible',
       conditionValue: 'Sí',
-      order: 84,
+      order: 87,
     ),
     QuestionStruct(
       id: 'm14_conyuge_trabajo',
@@ -1503,7 +1559,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm01_conjunta_posible',
       conditionValue: 'Sí',
-      order: 85,
+      order: 88,
     ),
     QuestionStruct(
       id: 'm14_conyuge_ss',
@@ -1520,7 +1576,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm01_conjunta_posible',
       conditionValue: 'Sí',
-      order: 86,
+      order: 89,
     ),
     QuestionStruct(
       id: 'm14_conyuge_retenciones',
@@ -1537,7 +1593,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm01_conjunta_posible',
       conditionValue: 'Sí',
-      order: 87,
+      order: 90,
     ),
     QuestionStruct(
       id: 'm14_conyuge_capital',
@@ -1555,7 +1611,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm01_conjunta_posible',
       conditionValue: 'Sí',
-      order: 88,
+      order: 91,
     ),
 
     // ===== M15 - Fiscalidad internacional =====
@@ -1573,7 +1629,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: '',
       conditionValue: '',
-      order: 89,
+      order: 92,
     ),
     QuestionStruct(
       id: 'm15_retencion_origen',
@@ -1590,7 +1646,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: 'm15_rentas_extranjero',
       conditionValue: 'Sí',
-      order: 90,
+      order: 93,
     ),
     QuestionStruct(
       id: 'm15_importe_retenido',
@@ -1606,7 +1662,7 @@ Future<List<QuestionStruct>> loadScript() async {
       min: 0.0,
       conditionField: 'm15_retencion_origen',
       conditionValue: 'Sí',
-      order: 91,
+      order: 94,
     ),
     QuestionStruct(
       id: 'm15_pais',
@@ -1631,7 +1687,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: 'm15_retencion_origen',
       conditionValue: 'Sí',
-      order: 92,
+      order: 95,
     ),
     QuestionStruct(
       id: 'm15_bienes_extranjero',
@@ -1648,7 +1704,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: '',
       conditionValue: '',
-      order: 93,
+      order: 96,
     ),
 
     // ===== M16 - Modelo 720 (bienes en el extranjero) =====
@@ -1667,7 +1723,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: false,
       conditionField: 'm15_bienes_extranjero',
       conditionValue: 'Sí',
-      order: 94,
+      order: 97,
     ),
     QuestionStruct(
       id: 'm16_cuentas',
@@ -1684,7 +1740,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: 'm15_bienes_extranjero',
       conditionValue: 'Sí',
-      order: 95,
+      order: 98,
     ),
     QuestionStruct(
       id: 'm16_valores',
@@ -1701,7 +1757,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: 'm15_bienes_extranjero',
       conditionValue: 'Sí',
-      order: 96,
+      order: 99,
     ),
     QuestionStruct(
       id: 'm16_inmuebles',
@@ -1718,7 +1774,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: true,
       conditionField: 'm15_bienes_extranjero',
       conditionValue: 'Sí',
-      order: 97,
+      order: 100,
     ),
 
     // ===== MZZ - Ultimos detalles =====
@@ -1736,7 +1792,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: false,
       conditionField: '',
       conditionValue: '',
-      order: 98,
+      order: 101,
     ),
     QuestionStruct(
       id: 'mzz_final',
@@ -1752,7 +1808,7 @@ Future<List<QuestionStruct>> loadScript() async {
       required: false,
       conditionField: '',
       conditionValue: '',
-      order: 99,
+      order: 102,
     ),
   ];
 }

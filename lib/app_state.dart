@@ -203,4 +203,10 @@ class FFAppState extends ChangeNotifier {
   set repeatModalOpen(bool value) {
     _repeatModalOpen = value;
   }
+
+  bool _sesionActiva = false;
+  bool get sesionActiva => _sesionActiva;
+  set sesionActiva(bool value) {
+    _sesionActiva = value;
+  }
 }
