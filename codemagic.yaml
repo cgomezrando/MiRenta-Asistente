@@ -1,6 +1,6 @@
 workflows:
-  ios-landscape-ipad:
-    name: iOS Landscape iPad Build
+  ios-ipad-only:
+    name: iOS iPad Only Build
     max_build_duration: 120
     integrations:
       app_store_connect: Apple Developer
@@ -47,67 +47,9 @@ workflows:
           mkdir -p ios/Runner/Assets.xcassets/AppIcon.appiconset
           dart run flutter_launcher_icons
 
-      - name: Configure iPad-only landscape-only target
+      - name: Force iPad-only device family
         script: |
-          set -euo pipefail
-
-          PLIST="ios/Runner/Info.plist"
-          PBXPROJ="ios/Runner.xcodeproj/project.pbxproj"
-
-          test -f "$PLIST"
-          test -f "$PBXPROJ"
-
-          # 1 = iPhone/iPod touch, 2 = iPad. Force every build configuration to iPad only.
-          python3 - "$PBXPROJ" <<'PY'
-          from pathlib import Path
-          import re
-          import sys
-
-          path = Path(sys.argv[1])
-          text = path.read_text()
-
-          text, family_count = re.subn(
-              r'TARGETED_DEVICE_FAMILY\s*=\s*[^;]+;',
-              'TARGETED_DEVICE_FAMILY = 2;',
-              text,
-          )
-          if family_count == 0:
-              raise SystemExit('TARGETED_DEVICE_FAMILY was not found in project.pbxproj')
-
-          replacements = {
-              r'INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad\s*=\s*[^;]+;':
-                  'INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";',
-              r'INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone\s*=\s*[^;]+;':
-                  'INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";',
-              r'INFOPLIST_KEY_UIRequiresFullScreen\s*=\s*[^;]+;':
-                  'INFOPLIST_KEY_UIRequiresFullScreen = YES;',
-          }
-          for pattern, replacement in replacements.items():
-              text = re.sub(pattern, replacement, text)
-
-          path.write_text(text)
-          print(f'Updated TARGETED_DEVICE_FAMILY in {family_count} build configurations')
-          PY
-
-          set_landscape_array() {
-            local key="$1"
-            /usr/libexec/PlistBuddy -c "Delete :${key}" "$PLIST" 2>/dev/null || true
-            /usr/libexec/PlistBuddy -c "Add :${key} array" "$PLIST"
-            /usr/libexec/PlistBuddy -c "Add :${key}:0 string UIInterfaceOrientationLandscapeLeft" "$PLIST"
-            /usr/libexec/PlistBuddy -c "Add :${key}:1 string UIInterfaceOrientationLandscapeRight" "$PLIST"
-          }
-
-          set_landscape_array "UISupportedInterfaceOrientations"
-          set_landscape_array "UISupportedInterfaceOrientations~ipad"
-
-          /usr/libexec/PlistBuddy -c "Delete :UIRequiresFullScreen" "$PLIST" 2>/dev/null || true
-          /usr/libexec/PlistBuddy -c "Add :UIRequiresFullScreen bool true" "$PLIST"
-
-          plutil -lint "$PLIST"
-          echo "Source Info.plist after patch:"
-          plutil -p "$PLIST" | grep -E 'UISupportedInterfaceOrientations|UIRequiresFullScreen' -A 5 || true
-          echo "Targeted device family settings:"
-          grep -n 'TARGETED_DEVICE_FAMILY' "$PBXPROJ"
+          sed -i '' -E 's/TARGETED_DEVICE_FAMILY = [^;]+;/TARGETED_DEVICE_FAMILY = 2;/g' ios/Runner.xcodeproj/project.pbxproj
 
       - name: Install pods
         script: find . -name "Podfile" -execdir pod install \;
@@ -116,63 +58,6 @@ workflows:
         script: |
           flutter build ipa --release \
             --export-options-plist=/Users/builder/export_options.plist
-
-      - name: Verify final IPA is iPad-only and landscape-only
-        script: |
-          set -euo pipefail
-
-          IPA="$(find build/ios/ipa -name '*.ipa' -print -quit)"
-          test -n "$IPA"
-
-          rm -rf /tmp/ipa_orientation_check
-          mkdir -p /tmp/ipa_orientation_check
-          unzip -q "$IPA" -d /tmp/ipa_orientation_check
-
-          APP_DIR="$(find /tmp/ipa_orientation_check/Payload -type d -name '*.app' -print -quit)"
-          test -n "$APP_DIR"
-          APP_PLIST="$APP_DIR/Info.plist"
-          test -f "$APP_PLIST"
-
-          echo "Final packaged Info.plist: $APP_PLIST"
-          plutil -p "$APP_PLIST" | grep -E 'UIDeviceFamily|UISupportedInterfaceOrientations|UIRequiresFullScreen' -A 6 || true
-
-          python3 - "$APP_PLIST" <<'PY'
-          import plistlib
-          import sys
-
-          plist_path = sys.argv[1]
-          with open(plist_path, 'rb') as file:
-              info = plistlib.load(file)
-
-          families = info.get('UIDeviceFamily', [])
-          if isinstance(families, int):
-              families = [families]
-          if families != [2]:
-              raise SystemExit(f'ERROR: UIDeviceFamily must be [2], got {families!r}')
-
-          expected = {
-              'UIInterfaceOrientationLandscapeLeft',
-              'UIInterfaceOrientationLandscapeRight',
-          }
-
-          generic = info.get('UISupportedInterfaceOrientations')
-          ipad = info.get('UISupportedInterfaceOrientations~ipad')
-
-          if set(generic or []) != expected:
-              raise SystemExit(
-                  'ERROR: generic supported orientations are not landscape-only: '
-                  f'{generic!r}'
-              )
-          if set(ipad or []) != expected:
-              raise SystemExit(
-                  'ERROR: iPad supported orientations are not landscape-only: '
-                  f'{ipad!r}'
-              )
-          if info.get('UIRequiresFullScreen') is not True:
-              raise SystemExit('ERROR: UIRequiresFullScreen is not true')
-
-          print('OK: packaged IPA targets only iPad and declares only both landscape orientations.')
-          PY
 
     artifacts:
       - build/ios/ipa/*.ipa
