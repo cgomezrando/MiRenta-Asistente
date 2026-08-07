@@ -423,24 +423,37 @@ Future<bool> mostrarAcceso(BuildContext context) async {
 
                 // Crear cuenta
                 try {
+                  // 1. Crear el usuario en Firebase Auth (lo esencial)
                   final cred = await FirebaseAuth.instance
                       .createUserWithEmailAndPassword(
                           email: correo, password: pass);
                   final uid = cred.user?.uid;
-                  await cred.user?.updateDisplayName(nombre);
-                  final fechaStr =
-                      '${fechaNac!.year}-${fechaNac!.month.toString().padLeft(2, '0')}-${fechaNac!.day.toString().padLeft(2, '0')}';
-                  if (uid != null) {
-                    await FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(uid)
-                        .set({
-                      'nombreCompleto': nombre,
-                      'fechaNacimiento': fechaStr,
-                      'email': correo,
-                      'createdAt': FieldValue.serverTimestamp(),
-                    });
+
+                  // 2. Operaciones secundarias (nombre y perfil en Firestore).
+                  // Si alguna falla, NO es un error crítico: la cuenta ya
+                  // está creada. Por eso van en su propio try/catch que no
+                  // muestra error al usuario.
+                  try {
+                    await cred.user?.updateDisplayName(nombre);
+                    final fechaStr =
+                        '${fechaNac!.year}-${fechaNac!.month.toString().padLeft(2, '0')}-${fechaNac!.day.toString().padLeft(2, '0')}';
+                    if (uid != null) {
+                      await FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(uid)
+                          .set({
+                        'nombreCompleto': nombre,
+                        'fechaNacimiento': fechaStr,
+                        'email': correo,
+                        'createdAt': FieldValue.serverTimestamp(),
+                      });
+                    }
+                  } catch (_) {
+                    // El perfil no se pudo guardar, pero la cuenta existe.
+                    // Continuamos como éxito.
                   }
+
+                  // 3. Éxito: cerrar y confirmar
                   if (ctx.mounted) Navigator.pop(ctx);
                   await mostrarConfirmacion(
                     'Cuenta creada',
