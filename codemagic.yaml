@@ -51,6 +51,16 @@ workflows:
         script: |
           sed -i '' -E 's/TARGETED_DEVICE_FAMILY = [^;]+;/TARGETED_DEVICE_FAMILY = 2;/g' ios/Runner.xcodeproj/project.pbxproj
 
+      - name: Set minimum iOS version to 15.0
+        script: |
+          sed -i '' -E 's/IPHONEOS_DEPLOYMENT_TARGET = [^;]+;/IPHONEOS_DEPLOYMENT_TARGET = 15.0;/g' ios/Runner.xcodeproj/project.pbxproj
+          if [ -f ios/Podfile ]; then
+            sed -i '' -E "s/^# *platform :ios.*/platform :ios, '15.0'/" ios/Podfile
+            sed -i '' -E "s/^platform :ios.*/platform :ios, '15.0'/" ios/Podfile
+          fi
+          echo "Deployment target after change:"
+          grep -n 'IPHONEOS_DEPLOYMENT_TARGET' ios/Runner.xcodeproj/project.pbxproj
+
       - name: Install pods
         script: find . -name "Podfile" -execdir pod install \;
 
